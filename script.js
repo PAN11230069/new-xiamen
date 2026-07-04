@@ -46,7 +46,7 @@ function getMapUrl(item, fallbackPlace = "") {
   return amapUrl(place, city);
 }
 
-function mapButton(item, label = "開啟地圖", fallbackPlace = "") {
+function mapButton(item, label = "開啟高德地圖", fallbackPlace = "") {
   const href = getMapUrl(item, fallbackPlace);
   return `<a class="map-btn" href="${href}" target="_blank" rel="noopener">${label}</a>`;
 }
@@ -98,12 +98,11 @@ function renderHero() {
   const meta = document.getElementById("hero-meta");
   meta.innerHTML = `
     <div class="meta-item"><div class="meta-label">目前行程</div><div class="meta-value">${currentDayLabel}</div></div>
-    <div class="meta-item"><div class="meta-label">今日重點</div><div class="meta-value">${highlight}</div></div>
     <div class="meta-item"><div class="meta-label">集合時間</div><div class="meta-value">${tripInfo.meetingTime}</div></div>
-    <div class="meta-item"><div class="meta-label">集合地點</div><div class="meta-value">${tripInfo.meetingPlace}</div></div>
     <div class="meta-item"><div class="meta-label">去程航班</div><div class="meta-value">${tripInfo.outboundFlight}</div></div>
+    <div class="meta-item"><div class="meta-label">今日重點</div><div class="meta-value">${highlight}</div></div>
+    <div class="meta-item"><div class="meta-label">集合地點</div><div class="meta-value">${tripInfo.meetingPlace}</div></div>
     <div class="meta-item"><div class="meta-label">回程航班</div><div class="meta-value">${tripInfo.returnFlightNo}</div></div>
-    <div class="meta-item"><div class="meta-label">緊急聯絡人</div><div class="meta-value">${tripInfo.emergencyContact || "尚未填寫"}</div></div>
   `;
 
   updateRouteProgress();
@@ -349,7 +348,6 @@ function renderTransfers() {
       </div>
       <div class="traffic-note">備註：${t.note}</div>
       <div class="traffic-actions">
-        ${t.routeMap ? mapButton({ map: t.routeMap }, "路線導航") : ""}
         ${mapButton({ ...t, to: t.pickup }, "上車地點")}
         ${mapButton({ ...t, to: t.dropoff }, "下車地點")}
       </div>
@@ -384,7 +382,6 @@ function renderLocalTraffic() {
       <div class="traffic-detail">交通方式：${t.transport}　｜　預估時間：${t.duration}</div>
       ${t.note ? `<div class="traffic-note">備註：${t.note}</div>` : ""}
       <div class="traffic-actions">
-        ${t.routeMap ? mapButton({ map: t.routeMap }, "路線導航") : ""}
         ${t.from ? mapButton({ ...t, to: t.from }, "起點地圖") : ""}
         ${t.to ? mapButton(t, "目的地地圖") : ""}
       </div>

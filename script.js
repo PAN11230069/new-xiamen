@@ -31,24 +31,55 @@ function formatDateRange() {
   return `${stripYear(tripInfo.startDate)} - ${stripYear(tripInfo.endDate)}`;
 }
 
+function isXiamenMap(item = {}) {
+  const city = (item.city || item.mapCity || "").toString();
+  const provider = (item.mapProvider || "").toString().toLowerCase();
+  if (provider) return provider === "amap" || provider === "gaode";
+  return city.includes("厦门") || city.includes("廈門") || city.toLowerCase().includes("xiamen");
+}
+
 function amapUrl(place, city = DEFAULT_AMAP_CITY) {
   const keyword = encodeURIComponent(place || "");
   const cityParam = city ? `&city=${encodeURIComponent(city)}` : "";
   return `https://uri.amap.com/search?keyword=${keyword}${cityParam}`;
 }
 
+function googleMapsSearchUrl(place) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place || "")}`;
+}
+
+function googleMapsDirUrl(from, to) {
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from || "")}&destination=${encodeURIComponent(to || "")}&travelmode=driving`;
+}
+
 function getMapUrl(item, fallbackPlace = "") {
-  if (!item) return amapUrl(fallbackPlace);
-  if (typeof item === "string") return amapUrl(item);
+  if (!item) return googleMapsSearchUrl(fallbackPlace);
+  if (typeof item === "string") return googleMapsSearchUrl(item);
   if (item.map) return item.map;
   const place = item.mapKeyword || item.to || item.place || item.name || fallbackPlace;
   const city = item.city || item.mapCity || DEFAULT_AMAP_CITY;
-  return amapUrl(place, city);
+  return isXiamenMap(item) ? amapUrl(place, city) : googleMapsSearchUrl(place);
 }
 
-function mapButton(item, label = "開啟高德地圖", fallbackPlace = "") {
+function getRouteMapUrl(item) {
+  if (!item) return "";
+  if (item.routeMap) return item.routeMap;
+  if (item.map && item.from && item.to) return item.map;
+  if (item.from && item.to && !isXiamenMap(item)) return googleMapsDirUrl(item.from, item.to);
+  return getMapUrl(item, item.to || item.place || item.name || "");
+}
+
+function mapButton(item, label = "", fallbackPlace = "") {
   const href = getMapUrl(item, fallbackPlace);
-  return `<a class="map-btn" href="${href}" target="_blank" rel="noopener">${label}</a>`;
+  const text = label || (isXiamenMap(item || {}) ? "開啟高德地圖" : "開啟 Google 地圖");
+  return `<a class="map-btn" href="${href}" target="_blank" rel="noopener">${text}</a>`;
+}
+
+function routeMapButton(item, label = "路線導航") {
+  const href = getRouteMapUrl(item);
+  if (!href) return "";
+  const text = label || (isXiamenMap(item || {}) ? "高德路線" : "Google 路線");
+  return `<a class="map-btn" href="${href}" target="_blank" rel="noopener">${text}</a>`;
 }
 
 function parseClockToMinutes(clock) {
@@ -348,6 +379,7 @@ function renderTransfers() {
       </div>
       <div class="traffic-note">備註：${t.note}</div>
       <div class="traffic-actions">
+        ${routeMapButton({ ...t, from: t.pickup, to: t.dropoff }, isXiamenMap(t) ? "高德路線" : "Google 路線")}
         ${mapButton({ ...t, to: t.pickup }, "上車地點")}
         ${mapButton({ ...t, to: t.dropoff }, "下車地點")}
       </div>
@@ -382,6 +414,7 @@ function renderLocalTraffic() {
       <div class="traffic-detail">交通方式：${t.transport}　｜　預估時間：${t.duration}</div>
       ${t.note ? `<div class="traffic-note">備註：${t.note}</div>` : ""}
       <div class="traffic-actions">
+        ${t.from && t.to ? routeMapButton(t, isXiamenMap(t) ? "高德路線" : "Google 路線") : ""}
         ${t.from ? mapButton({ ...t, to: t.from }, "起點地圖") : ""}
         ${t.to ? mapButton(t, "目的地地圖") : ""}
       </div>

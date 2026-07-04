@@ -503,6 +503,29 @@ a:focus-visible, .day-tab:focus-visible, .packing-list li:focus-visible {
   margin-top: 0;
 }
 
+.traffic-location-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.traffic-location-label {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(16,41,59,0.05);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.traffic-location-label strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
 .traffic-card.compact {
   padding: 12px 14px;
 }

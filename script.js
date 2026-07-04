@@ -368,23 +368,30 @@ function renderSchedule() {
 // ---------- 機場接送（送機／接機） ----------
 function renderTransfers() {
   const el = document.getElementById("transfer-list");
-  el.innerHTML = transfers.map(t => `
-    <div class="traffic-card">
-      <div class="traffic-route">${t.type}｜${t.pickup} → ${t.dropoff}</div>
-      <div class="traffic-detail">
-        用車日期：${stripYear(t.date)}　｜　時間：${t.time}
+  el.innerHTML = transfers.map(t => {
+    const pickupLabel = t.pickupLabel || t.pickup;
+    const dropoffLabel = t.dropoffLabel || t.dropoff;
+
+    return `
+      <div class="traffic-card">
+        <div class="traffic-route">${t.type}｜${pickupLabel} → ${dropoffLabel}</div>
+        <div class="traffic-detail">
+          用車日期：${stripYear(t.date)}　｜　時間：${t.time}
+        </div>
+        <div class="traffic-detail">
+          乘車人數：${t.passengers}　｜　行李件數：${t.luggage}　｜　航班：${t.flight}
+        </div>
+        <div class="traffic-note">備註：${t.note}</div>
+        <div class="traffic-location-tags">
+          <span class="traffic-location-label"><strong>上車地點：</strong>${pickupLabel}</span>
+          <span class="traffic-location-label"><strong>下車地點：</strong>${dropoffLabel}</span>
+        </div>
+        <div class="traffic-actions">
+          ${routeMapButton({ ...t, from: t.pickup, to: t.dropoff }, isXiamenMap(t) ? "高德路線" : "Google 路線")}
+        </div>
       </div>
-      <div class="traffic-detail">
-        乘車人數：${t.passengers}　｜　行李件數：${t.luggage}　｜　航班：${t.flight}
-      </div>
-      <div class="traffic-note">備註：${t.note}</div>
-      <div class="traffic-actions">
-        ${routeMapButton({ ...t, from: t.pickup, to: t.dropoff }, isXiamenMap(t) ? "高德路線" : "Google 路線")}
-        ${mapButton({ ...t, to: t.pickup }, "上車地點")}
-        ${mapButton({ ...t, to: t.dropoff }, "下車地點")}
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 // ---------- 航班 / 船班 ----------

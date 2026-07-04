@@ -274,7 +274,7 @@ const tripData = [
         end: "15:35",
         place: "松山機場",
         activity: "搭乘 B7-8821 前往金門",
-        transport: "飛機 B7-8821",
+        transport: "航班編號 B7-8821",
         duration: "14:30-15:35",
         ticket: true,
         reserve: false,
@@ -308,7 +308,6 @@ const tripData = [
         reserve: false,
         city: "金門",
         note: "隔天 09:00 搭船至廈門，建議提早休息",
-        map: ""
       }
     ]
   },
@@ -338,7 +337,7 @@ const tripData = [
         time: "09:00",
         start: "09:00",
         end: "09:30",
-        place: "金門碼頭",
+        place: "金門港水頭港區",
         activity: "搭船至廈門五通碼頭",
         transport: "船（金瑞龍）",
         duration: "09:00-09:30",
@@ -571,7 +570,7 @@ const tripData = [
         ticket: true,
         reserve: false,
         city: "厦门",
-        note: "回程日行程不要排太滿，注意天氣與體力",
+        note: "注意天氣與體力",
         map: ""
       },
       {
@@ -607,8 +606,8 @@ const tripData = [
         start: "20:15",
         end: "21:15",
         place: "金門機場",
-        activity: "搭機返台（B7-8836）",
-        transport: "飛機",
+        activity: "搭乘 B7-8836 返台",
+        transport: "航班編號 B7-8836",
         duration: "20:15-21:15",
         ticket: true,
         reserve: false,

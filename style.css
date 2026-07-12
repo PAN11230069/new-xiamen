@@ -559,3 +559,63 @@ a:focus-visible, .day-tab:focus-visible, .packing-list li:focus-visible {
     min-width: 46%;
   }
 }
+
+
+/* ---------- 共同花費：同一張表，左台幣、右人民幣 ---------- */
+#budget {
+  width: auto;
+  margin-left: 0;
+  transform: none;
+}
+
+.budget-table-wrap {
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(16,41,59,0.06);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.budget-table-combined {
+  min-width: 620px;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.budget-table-combined th:nth-child(n+2),
+.budget-table-combined td:nth-child(n+2) {
+  text-align: right;
+  font-family: var(--font-mono);
+}
+
+.budget-table-combined tfoot td[colspan] {
+  text-align: right;
+}
+
+.budget-converted {
+  color: var(--navy);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.budget-rate-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}
+
+@media (max-width: 420px) {
+  .budget-table-combined {
+    min-width: 560px;
+  }
+  .budget-table th,
+  .budget-table td {
+    padding: 8px 7px;
+    font-size: 12px;
+  }
+  .budget-input {
+    width: 76px;
+  }
+}

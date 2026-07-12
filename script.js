@@ -5,7 +5,8 @@
 const STORAGE_KEYS = {
   packing: "xm-trip-packing",
   todo: "xm-trip-todo",
-  budget: "xm-trip-budget"
+  budget: "xm-trip-budget",
+  budgetRmb: "xm-trip-budget-rmb"
 };
 
 const DEFAULT_AMAP_CITY = "厦门";
@@ -52,6 +53,10 @@ function googleMapsDirUrl(from, to) {
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from || "")}&destination=${encodeURIComponent(to || "")}&travelmode=driving`;
 }
 
+function shouldShowMapButton(item) {
+  return !(item && (item.hideMap === true || item.map === false));
+}
+
 function getMapUrl(item, fallbackPlace = "") {
   if (!item) return googleMapsSearchUrl(fallbackPlace);
   if (typeof item === "string") return googleMapsSearchUrl(item);
@@ -70,6 +75,7 @@ function getRouteMapUrl(item) {
 }
 
 function mapButton(item, label = "", fallbackPlace = "") {
+  if (!shouldShowMapButton(item)) return "";
   const href = getMapUrl(item, fallbackPlace);
   const text = label || (isXiamenMap(item || {}) ? "開啟高德地圖" : "開啟 Google 地圖");
   return `<a class="map-btn" href="${href}" target="_blank" rel="noopener">${text}</a>`;
@@ -412,22 +418,6 @@ function renderFlightFerry() {
   el.innerHTML = flightRows + ferryRows;
 }
 
-// ---------- 市內交通 ----------
-function renderLocalTraffic() {
-  const el = document.getElementById("traffic-list");
-  el.innerHTML = localTraffic.map(t => `
-    <div class="traffic-card">
-      <div class="traffic-route">${t.route}</div>
-      <div class="traffic-detail">交通方式：${t.transport}　｜　預估時間：${t.duration}</div>
-      ${t.note ? `<div class="traffic-note">備註：${t.note}</div>` : ""}
-      <div class="traffic-actions">
-        ${t.from && t.to ? routeMapButton(t, isXiamenMap(t) ? "高德路線" : "Google 路線") : ""}
-        ${t.from ? mapButton({ ...t, to: t.from }, "起點地圖") : ""}
-        ${t.to ? mapButton(t, "目的地地圖") : ""}
-      </div>
-    </div>
-  `).join("");
-}
 
 // ---------- 待辦（待訂購 / 待預約） ----------
 function loadTodoOverrides() {
@@ -532,32 +522,83 @@ function saveBudget(state) {
   localStorage.setItem(STORAGE_KEYS.budget, JSON.stringify(state));
 }
 
+function loadRmbBudget() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.budgetRmb)) || {}; }
+  catch { return {}; }
+}
+function saveRmbBudget(state) {
+  localStorage.setItem(STORAGE_KEYS.budgetRmb, JSON.stringify(state));
+}
+
+function formatMoney(value, digits = 0) {
+  return Number(value || 0).toLocaleString("zh-TW", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: digits
+  });
+}
+
 function renderBudget() {
-  const state = loadBudget();
+  const ntdState = loadBudget();
+  const rmbState = loadRmbBudget();
   const body = document.getElementById("budget-body");
+  if (!body) return;
+
+  const rmbRate = Number(tripInfo.rmbRate) || 4.75;
 
   function recalc() {
-    let total = 0;
-    body.querySelectorAll("input").forEach(inp => { total += Number(inp.value) || 0; });
-    document.getElementById("budget-total").textContent = total.toLocaleString();
-    document.getElementById("budget-avg").textContent = Math.round(total / members.length).toLocaleString();
+    let totalNtd = 0;
+    let totalRmb = 0;
+
+    body.querySelectorAll("[data-budget-ntd]").forEach(inp => {
+      totalNtd += Number(inp.value) || 0;
+    });
+
+    body.querySelectorAll("[data-budget-rmb]").forEach(inp => {
+      const rmb = Number(inp.value) || 0;
+      totalRmb += rmb;
+      const output = body.querySelector(`[data-rmb-ntd-output="${inp.dataset.idx}"]`);
+      if (output) output.textContent = `NT$${formatMoney(rmb * rmbRate)}`;
+    });
+
+    const rmbAsNtd = totalRmb * rmbRate;
+    const grandTotal = totalNtd + rmbAsNtd;
+    const avg = members.length ? Math.round(grandTotal / members.length) : 0;
+
+    document.getElementById("budget-total").textContent = `NT$${formatMoney(totalNtd)}`;
+    document.getElementById("budget-rmb-total").textContent = `¥${formatMoney(totalRmb, 2)}`;
+    document.getElementById("budget-rmb-total-ntd").textContent = `NT$${formatMoney(rmbAsNtd)}`;
+    document.getElementById("budget-grand-total").textContent = `NT$${formatMoney(grandTotal)}`;
+    document.getElementById("budget-grand-avg").textContent = `NT$${formatMoney(avg)}`;
   }
 
   body.innerHTML = budgetItems.map((b, i) => {
-    const val = state[i] !== undefined ? state[i] : b.amount;
+    const ntdVal = ntdState[i] !== undefined ? ntdState[i] : b.amount;
+    const rmbVal = rmbState[i] !== undefined ? rmbState[i] : 0;
+    const converted = (Number(rmbVal) || 0) * rmbRate;
     return `
       <tr>
         <td>${b.item}</td>
-        <td><input class="budget-input" type="number" min="0" inputmode="numeric" data-idx="${i}" value="${val}"></td>
+        <td><input class="budget-input" type="number" min="0" inputmode="numeric" data-budget-ntd data-idx="${i}" value="${ntdVal}"></td>
+        <td><input class="budget-input" type="number" min="0" step="0.01" inputmode="decimal" data-budget-rmb data-idx="${i}" value="${rmbVal}"></td>
+        <td class="budget-converted" data-rmb-ntd-output="${i}">NT$${formatMoney(converted)}</td>
       </tr>
     `;
   }).join("");
 
-  body.querySelectorAll("input").forEach(inp => {
+  body.querySelectorAll("[data-budget-ntd]").forEach(inp => {
     inp.addEventListener("input", () => {
       const state = loadBudget();
       state[inp.dataset.idx] = Number(inp.value) || 0;
       saveBudget(state);
+      recalc();
+    });
+  });
+
+  body.querySelectorAll("[data-budget-rmb]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const state = loadRmbBudget();
+      state[inp.dataset.idx] = Number(inp.value) || 0;
+      saveRmbBudget(state);
       recalc();
     });
   });
@@ -615,7 +656,6 @@ function init() {
   renderSchedule();
   renderTransfers();
   renderFlightFerry();
-  renderLocalTraffic();
   renderTodo();
   renderHotels();
   renderPacking();

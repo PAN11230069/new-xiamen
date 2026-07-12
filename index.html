@@ -77,9 +77,6 @@
 
     <h3 class="sub-title">兩岸航班 / 船班</h3>
     <div id="flight-ferry-list"></div>
-
-    <h3 class="sub-title">市內交通</h3>
-    <div class="traffic-list" id="traffic-list"></div>
   </section>
 
   <!-- 待訂購 / 待預約 -->
@@ -113,14 +110,44 @@
   <!-- 預算 -->
   <section class="section" id="budget">
     <h2 class="section-title"><span class="tag">預算</span>共同花費</h2>
-    <table class="budget-table" id="budget-table">
-      <thead><tr><th>項目</th><th>金額 (NTD)</th></tr></thead>
-      <tbody id="budget-body"></tbody>
-      <tfoot>
-        <tr><td>總計</td><td id="budget-total">0</td></tr>
-        <tr><td>每人平均（7人）</td><td id="budget-avg">0</td></tr>
-      </tfoot>
-    </table>
+    <p class="section-hint">左邊填台幣，右邊填人民幣；人民幣會直接乘以 4.75 換算成約台幣。</p>
+
+    <div class="budget-table-wrap">
+      <table class="budget-table budget-table-combined" id="budget-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>台幣 (NTD)</th>
+            <th>人民幣 (CNY)</th>
+            <th>人民幣換算台幣</th>
+          </tr>
+        </thead>
+        <tbody id="budget-body"></tbody>
+        <tfoot>
+          <tr>
+            <td>台幣總計</td>
+            <td id="budget-total">NT$0</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>人民幣總計</td>
+            <td></td>
+            <td id="budget-rmb-total">¥0</td>
+            <td id="budget-rmb-total-ntd">NT$0</td>
+          </tr>
+          <tr>
+            <td>總計約台幣</td>
+            <td colspan="3" id="budget-grand-total">NT$0</td>
+          </tr>
+          <tr>
+            <td>每人平均（7人）</td>
+            <td colspan="3" id="budget-grand-avg">NT$0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="budget-rate-note">匯率：人民幣 × 4.75 = 約台幣</div>
   </section>
 
   <!-- 美食清單 -->

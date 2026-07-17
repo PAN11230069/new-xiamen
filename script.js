@@ -6,7 +6,8 @@ const STORAGE_KEYS = {
   packing: "xm-trip-packing",
   todo: "xm-trip-todo",
   budget: "xm-trip-budget",
-  budgetRmb: "xm-trip-budget-rmb"
+  budgetRmb: "xm-trip-budget-rmb",
+  budgetExtra: "xm-trip-budget-extra"
 };
 
 const DEFAULT_AMAP_CITY = "厦门";
@@ -530,6 +531,26 @@ function saveRmbBudget(state) {
   localStorage.setItem(STORAGE_KEYS.budgetRmb, JSON.stringify(state));
 }
 
+function loadExtraBudgetItems() {
+  try {
+    const items = JSON.parse(localStorage.getItem(STORAGE_KEYS.budgetExtra)) || [];
+    return Array.isArray(items) ? items : [];
+  } catch {
+    return [];
+  }
+}
+function saveExtraBudgetItems(items) {
+  localStorage.setItem(STORAGE_KEYS.budgetExtra, JSON.stringify(items));
+}
+function createExtraBudgetItem() {
+  return {
+    id: `extra-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    item: "",
+    ntd: 0,
+    rmb: 0
+  };
+}
+
 function formatMoney(value, digits = 0) {
   return Number(value || 0).toLocaleString("zh-TW", {
     minimumFractionDigits: 0,
@@ -540,23 +561,60 @@ function formatMoney(value, digits = 0) {
 function renderBudget() {
   const ntdState = loadBudget();
   const rmbState = loadRmbBudget();
+  const extraItems = loadExtraBudgetItems();
   const body = document.getElementById("budget-body");
+  const addBtn = document.getElementById("budget-add-extra");
   if (!body) return;
 
   const rmbRate = Number(tripInfo.rmbRate) || 4.75;
+
+  function fixedRowHtml(b, i) {
+    const ntdVal = ntdState[i] !== undefined ? ntdState[i] : b.amount;
+    const rmbVal = rmbState[i] !== undefined ? rmbState[i] : 0;
+    const converted = (Number(rmbVal) || 0) * rmbRate;
+    return `
+      <tr data-row-type="fixed" data-idx="${i}">
+        <td>${b.item}</td>
+        <td><input class="budget-input" type="number" min="0" inputmode="numeric" data-budget-ntd data-idx="${i}" value="${ntdVal}"></td>
+        <td><input class="budget-input" type="number" min="0" step="0.01" inputmode="decimal" data-budget-rmb data-idx="${i}" value="${rmbVal}"></td>
+        <td class="budget-converted" data-rmb-ntd-output="${i}">NT$${formatMoney(converted)}</td>
+      </tr>
+    `;
+  }
+
+  function extraRowHtml(item) {
+    const id = item.id;
+    const ntdVal = Number(item.ntd) || 0;
+    const rmbVal = Number(item.rmb) || 0;
+    const converted = rmbVal * rmbRate;
+    return `
+      <tr data-row-type="extra" data-extra-id="${id}">
+        <td>
+          <div class="budget-extra-item-cell">
+            <input class="budget-item-input" type="text" data-budget-item-name data-extra-id="${id}" value="${item.item || ""}" placeholder="輸入其他花費">
+            <button type="button" class="budget-delete-btn" data-delete-extra="${id}" aria-label="刪除此筆其他花費">刪除</button>
+          </div>
+        </td>
+        <td><input class="budget-input" type="number" min="0" inputmode="numeric" data-budget-extra-ntd data-extra-id="${id}" value="${ntdVal}"></td>
+        <td><input class="budget-input" type="number" min="0" step="0.01" inputmode="decimal" data-budget-extra-rmb data-extra-id="${id}" value="${rmbVal}"></td>
+        <td class="budget-converted" data-rmb-ntd-output="${id}">NT$${formatMoney(converted)}</td>
+      </tr>
+    `;
+  }
 
   function recalc() {
     let totalNtd = 0;
     let totalRmb = 0;
 
-    body.querySelectorAll("[data-budget-ntd]").forEach(inp => {
+    body.querySelectorAll("[data-budget-ntd], [data-budget-extra-ntd]").forEach(inp => {
       totalNtd += Number(inp.value) || 0;
     });
 
-    body.querySelectorAll("[data-budget-rmb]").forEach(inp => {
+    body.querySelectorAll("[data-budget-rmb], [data-budget-extra-rmb]").forEach(inp => {
       const rmb = Number(inp.value) || 0;
       totalRmb += rmb;
-      const output = body.querySelector(`[data-rmb-ntd-output="${inp.dataset.idx}"]`);
+      const key = inp.dataset.idx || inp.dataset.extraId;
+      const output = body.querySelector(`[data-rmb-ntd-output="${key}"]`);
       if (output) output.textContent = `NT$${formatMoney(rmb * rmbRate)}`;
     });
 
@@ -571,19 +629,15 @@ function renderBudget() {
     document.getElementById("budget-grand-avg").textContent = `NT$${formatMoney(avg)}`;
   }
 
-  body.innerHTML = budgetItems.map((b, i) => {
-    const ntdVal = ntdState[i] !== undefined ? ntdState[i] : b.amount;
-    const rmbVal = rmbState[i] !== undefined ? rmbState[i] : 0;
-    const converted = (Number(rmbVal) || 0) * rmbRate;
-    return `
-      <tr>
-        <td>${b.item}</td>
-        <td><input class="budget-input" type="number" min="0" inputmode="numeric" data-budget-ntd data-idx="${i}" value="${ntdVal}"></td>
-        <td><input class="budget-input" type="number" min="0" step="0.01" inputmode="decimal" data-budget-rmb data-idx="${i}" value="${rmbVal}"></td>
-        <td class="budget-converted" data-rmb-ntd-output="${i}">NT$${formatMoney(converted)}</td>
-      </tr>
-    `;
-  }).join("");
+  function updateExtraItem(id, patch) {
+    const items = loadExtraBudgetItems();
+    const idx = items.findIndex(item => item.id === id);
+    if (idx === -1) return;
+    items[idx] = { ...items[idx], ...patch };
+    saveExtraBudgetItems(items);
+  }
+
+  body.innerHTML = budgetItems.map(fixedRowHtml).join("") + extraItems.map(extraRowHtml).join("");
 
   body.querySelectorAll("[data-budget-ntd]").forEach(inp => {
     inp.addEventListener("input", () => {
@@ -602,6 +656,47 @@ function renderBudget() {
       recalc();
     });
   });
+
+  body.querySelectorAll("[data-budget-item-name]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      updateExtraItem(inp.dataset.extraId, { item: inp.value });
+    });
+  });
+
+  body.querySelectorAll("[data-budget-extra-ntd]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      updateExtraItem(inp.dataset.extraId, { ntd: Number(inp.value) || 0 });
+      recalc();
+    });
+  });
+
+  body.querySelectorAll("[data-budget-extra-rmb]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      updateExtraItem(inp.dataset.extraId, { rmb: Number(inp.value) || 0 });
+      recalc();
+    });
+  });
+
+  body.querySelectorAll("[data-delete-extra]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.deleteExtra;
+      const items = loadExtraBudgetItems().filter(item => item.id !== id);
+      saveExtraBudgetItems(items);
+      renderBudget();
+    });
+  });
+
+  if (addBtn && !addBtn.dataset.bound) {
+    addBtn.dataset.bound = "true";
+    addBtn.addEventListener("click", () => {
+      const items = loadExtraBudgetItems();
+      items.push(createExtraBudgetItem());
+      saveExtraBudgetItems(items);
+      renderBudget();
+      const latest = body.querySelector("tr[data-row-type='extra']:last-child [data-budget-item-name]");
+      if (latest) latest.focus();
+    });
+  }
 
   recalc();
 }

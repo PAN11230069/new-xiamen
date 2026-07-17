@@ -99,14 +99,14 @@ const todoList = {
 
 const hotels = [
   {
-    name: "歡樂滿屋民宿",
+    name: "溫馨庭園民宿",
     nights: "7/19",
-    address: "金門縣金城鎮榜林村伯玉路一段236巷8號",
+    address: "金門縣金城鎮小西門120-1號",
     checkin: "7/19 16:30",
     checkout: "7/20 08:00",
-    phone: "0963 591 810",
+    phone: "0985-903-422",
     city: "金門",
-    map: "https://maps.app.goo.gl/9rp7HKcj4hut9rfB7"
+    map: "https://maps.app.goo.gl/m1SthpsEohksXe677"
   },
   {
     name: "廈門中山路步行街檀邑飯店",
@@ -131,8 +131,7 @@ const budgetItems = [
   { item: "住宿", amount: 0 },
   { item: "交通", amount: 0 },
   { item: "門票", amount: 0 },
-  { item: "餐費", amount: 0 },
-  { item: "其他", amount: 0 }
+  { item: "餐費", amount: 0 }
 ];
 
 const foodList = {
@@ -200,14 +199,14 @@ const tripData = [
         ticket: false,
         reserve: false,
         city: "金門",
-        note: "抵達後前往歡樂滿屋民宿",
-        map: "https://www.google.com/maps/dir/%E9%87%91%E9%96%80%E6%A9%9F%E5%A0%B4+891%E9%87%91%E9%96%80%E7%B8%A3%E9%87%91%E6%B9%96%E9%8E%AE%E6%AD%A3%E7%BE%A9%E9%87%8C%E5%B0%9A%E7%BE%A9%E6%A9%9F%E5%A0%B42%E8%99%9F/%E9%87%91%E9%96%80%E6%AD%A1%E6%A8%82%E6%BB%BF%E5%B1%8B%E6%B0%91%E5%AE%BF+893%E9%87%91%E9%96%80%E7%B8%A3%E9%87%91%E5%9F%8E%E9%8E%AE%E6%A6%9C%E6%9E%97%E6%9D%91%E4%BC%AF%E7%8E%89%E8%B7%AF%E4%B8%80%E6%AE%B5236%E5%B7%B78%E8%99%9F/@24.4375502,118.3368217,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x3414a3babde97bf3:0xe865cdbc08733924!2m2!1d118.3596702!2d24.4290517!1m5!1m1!1s0x3414a25b7b5b5fc1:0x3a61731b9bb5b027!2m2!1d118.3290742!2d24.4382932!3e0?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D"
+        note: "抵達後前往溫馨庭園民宿",
+        map: "https://maps.app.goo.gl/vQS1HfWYy7zNWZdR7"
       },
       {
         time: "16:30",
         start: "16:30",
         end: "22:00",
-        place: "歡樂滿屋民宿",
+        place: "溫馨庭園民宿",
         activity: "入住休息，自由活動",
         transport: "自行安排",
         duration: "住宿 1 晚",
@@ -228,18 +227,18 @@ const tripData = [
     location: "金門 / 廈門",
     plans: [
       {
-        time: "08:00",
-        start: "08:00",
-        end: "08:40",
-        place: "歡樂滿屋民宿",
+        time: "07:20",
+        start: "07:20",
+        end: "08:00",
+        place: "溫馨庭園民宿",
         activity: "退房，前往金門碼頭",
         transport: "計程車",
-        duration: "依實際路況",
+        duration: "約 40 分鐘 / 依實際路況",
         ticket: false,
         reserve: false,
         city: "金門",
-        note: "9:00 船班，請提早抵達碼頭",
-        map: "https://www.google.com/maps/dir/%E9%87%91%E9%96%80%E6%AD%A1%E6%A8%82%E6%BB%BF%E5%B1%8B%E6%B0%91%E5%AE%BF+893%E9%87%91%E9%96%80%E7%B8%A3%E9%87%91%E5%9F%8E%E9%8E%AE%E6%A6%9C%E6%9E%97%E6%9D%91%E4%BC%AF%E7%8E%89%E8%B7%AF%E4%B8%80%E6%AE%B5236%E5%B7%B78%E8%99%9F/%E9%87%91%E9%96%80%E6%B8%AF%E6%B0%B4%E9%A0%AD%E6%B8%AF%E5%8D%80%E6%97%85%E5%AE%A2%E6%9C%8D%E5%8B%99%E4%B8%AD%E5%BF%83+893%E9%87%91%E9%96%80%E7%B8%A3%E9%87%91%E5%9F%8E%E9%8E%AE%E9%87%91%E6%B0%B4%E9%87%8C%E8%A5%BF%E6%B5%B7%E8%B7%AF%E4%B8%80%E6%AE%B55%E8%99%9F/@24.4161214,118.2866356,17.25z/data=!4m14!4m13!1m5!1m1!1s0x3414a25b7b5b5fc1:0x3a61731b9bb5b027!2m2!1d118.3290742!2d24.4382932!1m5!1m1!1s0x341498b265b738db:0x55772bbecc07d77!2m2!1d118.2869531!2d24.4151197!3e0?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D"
+        note: "09:00 船班，08:00 前到達碼頭換票，請提早出發",
+        map: "https://maps.app.goo.gl/E6gApvZ3Kyjqrzfj8"
       },
       {
         time: "09:00",
@@ -304,8 +303,8 @@ const tripData = [
     date: "2026-07-21",
     displayDate: "7/21",
     week: "星期二",
-    title: "鼓浪嶼與八市晚餐",
-    location: "廈門 / 鼓浪嶼",
+    title: "鼓浪嶼與中華城",
+    location: "廈門 / 鼓浪嶼 / 中華城",
     plans: [
       {
         time: "09:00",
@@ -322,9 +321,9 @@ const tripData = [
         map: "https://surl.amap.com/i6jzAU266Jq"
       },
       {
-        time: "10:00",
-        start: "10:00",
-        end: "10:30",
+        time: "10:30",
+        start: "10:30",
+        end: "10:50",
         place: "東渡碼頭",
         activity: "搭船前往三丘田碼頭",
         transport: "船",
@@ -336,32 +335,46 @@ const tripData = [
         note: "船票需提前購買，建議預留安檢與排隊時間"
       },
       {
-        time: "10:30",
-        start: "10:30",
+        time: "10:50",
+        start: "10:50",
         end: "16:30",
         place: "鼓浪嶼",
         activity: "鼓浪嶼自由行、拍照、午餐",
         transport: "步行",
-        duration: "約 6 小時",
+        duration: "約 5.5 小時",
         ticket: false,
         reserve: false,
         city: "厦门",
-        note: "島上以步行為主，建議穿好走的鞋",
-        map: "https://surl.amap.com/ibdPvRgc4I4"
+        hideMap: true,
+        note: "島上以步行為主，建議穿好走的鞋"
+      },
+      {
+        time: "16:30",
+        start: "16:30",
+        end: "17:00",
+        place: "鼓浪嶼",
+        activity: "搭船返回東渡碼頭",
+        transport: "船",
+        duration: "約 20 分鐘",
+        ticket: true,
+        reserve: false,
+        city: "厦门",
+        note: "返程後接續前往中華城",
+        map: "https://surl.amap.com/16h3wVcG08r"
       },
       {
         time: "17:30",
         start: "17:30",
         end: "20:00",
-        place: "第八市場",
-        activity: "晚餐",
-        transport: "返程後轉計程車",
-        duration: "約 16 分鐘",
+        place: "中華城",
+        activity: "逛街、晚餐",
+        transport: "計程車",
+        duration: "約 14 分鐘",
         ticket: false,
         reserve: false,
         city: "厦门",
-        note: "可安排小吃或海鮮，注意集合時間",
-        map: "https://surl.amap.com/ibHylQewe6q"
+        note: "回東渡後前往中華城，晚餐與逛街可安排在這裡",
+        map: "https://surl.amap.com/15QMglYW81B"
       }
     ]
   },
@@ -370,45 +383,31 @@ const tripData = [
     date: "2026-07-22",
     displayDate: "7/22",
     week: "星期三",
-    title: "沙波尾、南普陀寺與廈門大學",
+    title: "華僑博物院、南普陀寺與沙波尾",
     location: "廈門市區",
     plans: [
       {
         time: "09:00",
         start: "09:00",
-        end: "09:20",
+        end: "09:15",
         place: "廈門中山路步行街檀邑飯店",
-        activity: "出發前往沙波尾",
+        activity: "出發前往華僑博物院",
         transport: "計程車",
-        duration: "約 11 分鐘",
+        duration: "約 9 分鐘",
         ticket: false,
         reserve: false,
         city: "厦门",
-        note: "前往沙波尾，建議先確認當日天氣與路況",
-        map: "https://surl.amap.com/iegWwX0nfCw"
+        note: "前往華僑博物院，建議先確認當日預約與開放時間",
+        map: "https://surl.amap.com/14NE89kCf6v"
       },
       {
-        time: "10:00",
-        start: "10:00",
-        end: "11:30",
-        place: "沙波尾",
-        activity: "散步、拍照",
-        transport: "計程車",
-        duration: "約 1.5 小時",
-        ticket: false,
-        reserve: false,
-        city: "厦门",
-        note: "文青街區，適合拍照",
-        map: "https://surl.amap.com/ikiud3s1r5uV"
-      },
-      {
-        time: "12:00",
-        start: "12:00",
-        end: "13:20",
+        time: "09:30",
+        start: "09:30",
+        end: "11:00",
         place: "華僑博物院",
         activity: "參觀",
-        transport: "步行",
-        duration: "步行約 12 分鐘",
+        transport: "計程車",
+        duration: "約 1.5 小時",
         ticket: false,
         reserve: true,
         city: "厦门",
@@ -416,9 +415,9 @@ const tripData = [
         map: "https://surl.amap.com/inZui0O3eul"
       },
       {
-        time: "14:00",
-        start: "14:00",
-        end: "14:50",
+        time: "11:20",
+        start: "11:20",
+        end: "12:20",
         place: "南普陀寺",
         activity: "參觀",
         transport: "步行",
@@ -430,9 +429,9 @@ const tripData = [
         map: "https://surl.amap.com/iqW7Laago7"
       },
       {
-        time: "15:00",
-        start: "15:00",
-        end: "16:30",
+        time: "12:30",
+        start: "12:30",
+        end: "14:30",
         place: "廈門大學",
         activity: "參觀校園",
         transport: "步行",
@@ -441,21 +440,35 @@ const tripData = [
         reserve: true,
         city: "厦门",
         note: "待預約，需確認入校規定與證件",
-        map: "https://surl.amap.com/ipz7iaKr2g9"
+        map: "https://surl.amap.com/16sIu1s1tdCd"
+      },
+      {
+        time: "14:45",
+        start: "14:45",
+        end: "16:30",
+        place: "沙波尾",
+        activity: "散步、拍照",
+        transport: "計程車",
+        duration: "約 7 分鐘",
+        ticket: false,
+        reserve: false,
+        city: "厦门",
+        note: "文青街區，適合拍照",
+        map: "https://surl.amap.com/172poR4g5je"
       },
       {
         time: "17:00",
         start: "17:00",
         end: "19:30",
-        place: "曾厝垵",
+        place: "中山路步行街 / 第八市場",
         activity: "逛街、晚餐",
         transport: "計程車",
-        duration: "約 12 分鐘",
+        duration: "約 11 分鐘",
         ticket: false,
         reserve: false,
         city: "厦门",
-        note: "人潮較多，請先約好集合點",
-        map: "https://surl.amap.com/irevMKeseEh"
+        note: "安排中山路步行街與第八市場晚餐，請先約好集合點",
+        map: "https://surl.amap.com/173TI3M17GB"
       },
       {
         time: "20:30",
@@ -464,7 +477,7 @@ const tripData = [
         place: "廈門中山路步行街檀邑飯店",
         activity: "返回酒店",
         transport: "計程車",
-        duration: "約 16 分鐘",
+        duration: "依實際路況",
         ticket: false,
         reserve: false,
         city: "厦门",

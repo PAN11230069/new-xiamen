@@ -619,3 +619,71 @@ a:focus-visible, .day-tab:focus-visible, .packing-list li:focus-visible {
     width: 76px;
   }
 }
+
+
+/* ---------- 共同花費：新增其他花費 ---------- */
+.budget-extra-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.budget-add-btn,
+.budget-delete-btn {
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.budget-add-btn {
+  background: var(--navy);
+  color: var(--paper);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.budget-add-btn:active,
+.budget-delete-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.budget-extra-item-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.budget-item-input {
+  width: 128px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 7px;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.budget-item-input:focus {
+  outline: 2px solid rgba(228,96,47,0.25);
+  border-color: var(--coral);
+}
+
+.budget-delete-btn {
+  background: rgba(228,96,47,0.12);
+  color: var(--coral);
+  padding: 5px 7px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .budget-table-combined {
+    min-width: 680px;
+  }
+  .budget-item-input {
+    width: 108px;
+  }
+}
